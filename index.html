@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>배정윤이 빼빼로를 보냈어요 🎁</title>
+<meta name="description" content="받기 누르면 뭐가 튀어나올지 몰라요. 아몬드·누드·딸기·화이트·기본 5종 랜덤!">
+<meta property="og:type" content="website">
+<meta property="og:title" content="배정윤이 빼빼로를 보냈어요 🎁">
+<meta property="og:description" content="받기 누르면 뭐가 튀어나올지 몰라요. 5종 랜덤!">
+<meta property="og:url" content="https://jeongyun914.github.io/pepero-day/">
+<meta property="og:image" content="https://jeongyun914.github.io/pepero-day/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* 다크 초콜릿 바탕 위 과자색 티켓 한 장 → 받으면 맛마다 다른 색의 집중선 무대 */
+  --choco: #2b150d;
+  --choco-2: #4a2717;
+  --biscuit: #f0c27b;
+  --paper: #fff6e6;
+  --berry: #ff4f8b;
+  --berry-2: #ff74a4;
+  --berry-ink: #c01d5c;
+  --font-display: "Bagel Fat One", "Black Han Sans", "Apple SD Gothic Neo", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; }
+body {
+  background-color: var(--choco);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 79, 139, .2) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 80%, rgba(240, 194, 123, .16) 0 2px, transparent 3px);
+  background-size: 46px 46px, 62px 62px;
+  color: var(--paper);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 3px solid var(--biscuit); outline-offset: 4px; }
+
+/* ---------- 선물 화면 ---------- */
+.gift {
+  min-height: 100%;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 16px;
+  padding: 28px 16px 36px;
+}
+.eyebrow { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: .08em; color: var(--biscuit); }
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(30px, 8.4vw, 44px);
+  line-height: 1.15;
+  text-align: center;
+  text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--berry); }
+.note { margin: 0 0 4px; font-size: 15px; color: rgba(255, 246, 230, .82); text-align: center; }
+
+.ticket {
+  width: min(100%, 340px);
+  background: var(--paper);
+  color: var(--choco);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+}
+.ticket-art { background: var(--berry); height: 130px; }
+.ticket-art svg { width: 100%; height: 100%; display: block; }
+.art-num { font-family: var(--font-display); font-size: 62px; fill: var(--choco); }
+.perf { position: relative; height: 0; margin: 0 18px; border-top: 2px dashed rgba(43, 21, 13, .25); }
+.perf::before, .perf::after {
+  content: ""; position: absolute; top: -13px;
+  width: 24px; height: 24px; border-radius: 50%; background: var(--choco);
+}
+.perf::before { left: -30px; }
+.perf::after { right: -30px; }
+.ticket-body { padding: 18px 22px 18px; display: grid; gap: 12px; }
+.shop { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .1em; color: var(--berry-ink); }
+.item { margin: -6px 0 0; font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.2; }
+.ticket dl { margin: 0; display: grid; gap: 6px; font-size: 14px; }
+.ticket dl div { display: flex; justify-content: space-between; gap: 12px; }
+.ticket dt { color: rgba(43, 21, 13, .62); }
+.ticket dd { margin: 0; font-weight: 500; text-align: right; }
+.barcode { width: 100%; height: 50px; display: block; fill: var(--choco); }
+.code { margin: -6px 0 0; text-align: center; font-size: 13px; letter-spacing: .2em; font-variant-numeric: tabular-nums; }
+
+.claim {
+  appearance: none; border: 0; cursor: pointer;
+  width: min(100%, 340px);
+  margin-top: 6px;
+  padding: 15px 24px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--choco);
+  background: var(--berry);
+  box-shadow: 0 6px 0 #b8245a;
+  transition: transform .1s, box-shadow .1s, background-color .15s;
+}
+.claim:hover { background: var(--berry-2); }
+.claim:active { transform: translateY(4px); box-shadow: 0 2px 0 #b8245a; }
+.claim:disabled { cursor: progress; }
+.fine { margin: 0; font-size: 12px; color: rgba(255, 246, 230, .6); }
+
+.ticket.rattle { animation: rattle .09s linear infinite; }
+@keyframes rattle {
+  0%   { transform: translate(0, 0) rotate(0); }
+  25%  { transform: translate(-5px, 2px) rotate(-2.5deg); }
+  50%  { transform: translate(4px, -2px) rotate(2deg); }
+  75%  { transform: translate(-2px, -3px) rotate(-1deg); }
+  100% { transform: translate(0, 0) rotate(0); }
+}
+
+/* ---------- 빼빼로 무대 ---------- */
+.party {
+  --aw: min(22vh, 40vw, 180px);
+  --ray-a: #ff4f8b; --ray-b: #ff74a4; --glow: rgba(255, 246, 230, .8);
+  --coat: #4a2717; --coat-hi: #7d4a30;
+  position: fixed; inset: 0; z-index: 10;
+  display: grid; grid-template-rows: 1fr auto;
+  overflow: hidden;
+  background: var(--ray-a);
+}
+.party[data-type="nude"]   { --ray-a: #ff9f7a; --ray-b: #ffb08f; --glow: rgba(255, 246, 230, .8); }
+.party[data-type="crying"] { --ray-a: #7fb2f5; --ray-b: #93c0f8; --glow: rgba(255, 255, 255, .75); --coat: #ff9ec4; --coat-hi: #ffd3e4; }
+.party[data-type="sleepy"] { --ray-a: #2a2862; --ray-b: #333177; --glow: rgba(190, 184, 255, .5);  --coat: #f4ecda; --coat-hi: #ffffff; }
+.party[data-type="flex"]   { --ray-a: #ffb703; --ray-b: #ffc83a; --glow: rgba(255, 255, 255, .85); }
+
+.rays {
+  position: absolute; left: 50%; top: 42%;
+  width: 250vmax; height: 250vmax; margin: -125vmax 0 0 -125vmax;
+  background: repeating-conic-gradient(var(--ray-a) 0deg 7deg, var(--ray-b) 7deg 14deg);
+  animation: spin 24s linear infinite;
+}
+.party::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(circle at 50% 42%, var(--glow) 0, transparent 36%);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#fx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.stage { position: relative; z-index: 3; min-height: 0; }
+.actor {
+  position: absolute; left: 50%; top: 50%;
+  width: var(--aw); height: calc(var(--aw) * 2);
+  margin-left: calc(var(--aw) / -2); margin-top: calc(var(--aw) * -1);
+  padding: 0; border: 0; background: none; cursor: pointer;
+  will-change: transform;
+}
+.actor:focus-visible { outline: 3px dashed var(--choco); outline-offset: 8px; border-radius: 48px; }
+.actor svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* 맛별 부품: data-show에 적힌 종류일 때만 보임 */
+.coat { fill: var(--coat); }
+.coat-hi { stroke: var(--coat-hi); }
+[data-show] { display: none; }
+.party[data-type="yalal"]  [data-show~="yalal"],
+.party[data-type="nude"]   [data-show~="nude"],
+.party[data-type="crying"] [data-show~="crying"],
+.party[data-type="sleepy"] [data-show~="sleepy"],
+.party[data-type="flex"]   [data-show~="flex"] { display: inline; }
+
+.sweat { animation: drip .6s linear infinite; }
+.sweat.s2 { animation-delay: .3s; }
+@keyframes drip { from { transform: translate(0, 0); opacity: 1; } to { transform: translate(6px, 26px); opacity: 0; } }
+.tear { stroke-dasharray: 14 10; animation: flow .45s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -24; } }
+
+.bubble {
+  position: absolute; left: 50%; z-index: 4;
+  top: max(12px, calc(50% - var(--aw) - 76px));
+  max-width: calc(100% - 32px);
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border: 3px solid var(--choco);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--choco);
+  color: var(--choco);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 5.6vw, 30px);
+  text-align: center;
+  text-wrap: balance;
+  pointer-events: none;
+}
+.bubble::after {
+  content: ""; position: absolute; left: 50%; bottom: -12px;
+  width: 20px; height: 20px;
+  background: var(--paper);
+  border-right: 3px solid var(--choco); border-bottom: 3px solid var(--choco);
+  transform: translateX(-50%) rotate(45deg);
+}
+.bubble span { display: inline-block; }
+.bubble span.pop { animation: pop .25s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes pop { from { transform: scale(.4); } to { transform: scale(1); } }
+
+.result {
+  position: relative; z-index: 5;
+  width: min(100% - 32px, 420px);
+  margin: 0 auto 16px;
+  padding: 18px 20px;
+  display: grid; gap: 6px;
+  text-align: center;
+  border-radius: 22px;
+  background: var(--choco);
+  color: var(--paper);
+  box-shadow: 0 10px 30px rgba(43, 21, 13, .35);
+  animation: rise .5s .9s both cubic-bezier(.2, 1.4, .4, 1);
+}
+@keyframes rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+.result-kicker { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .06em; color: var(--biscuit); }
+.result-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(20px, 5.4vw, 26px); line-height: 1.2; text-wrap: balance; }
+.result-fine { margin: 0; font-size: 13px; color: rgba(255, 246, 230, .72); }
+.result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+.btn {
+  appearance: none; border: 0; cursor: pointer;
+  padding: 10px 18px; border-radius: 999px;
+  font-family: var(--font-body); font-weight: 700; font-size: 15px;
+}
+.btn-main { background: var(--berry); color: var(--choco); }
+.btn-main:hover { background: var(--berry-2); }
+.btn-ghost { background: transparent; color: var(--paper); box-shadow: inset 0 0 0 2px rgba(255, 246, 230, .4); }
+.btn-ghost:hover { box-shadow: inset 0 0 0 2px var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rays, .sweat, .tear, .ticket.rattle, .result, .bubble span.pop { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<main id="gift" class="gift">
+  <p class="eyebrow">선물 도착 · 11월 11일</p>
+  <h1>배정윤이 <em>빼빼로</em>를<br>보냈어요</h1>
+  <p class="note">“빼빼로데이라서 준비했어. 꼭 받아줘!”</p>
+
+  <article id="ticket" class="ticket" aria-label="빼빼로 기프티콘">
+    <div class="ticket-art">
+      <svg viewBox="0 0 340 130" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <g id="stick">
+            <rect x="0" y="2" width="170" height="14" rx="7" fill="#f0c27b"/>
+            <rect x="0" y="0" width="118" height="18" rx="9" fill="#4a2717"/>
+            <rect x="20" y="4" width="8" height="3" rx="1.5" fill="#fff6e6" transform="rotate(20 24 5)"/>
+            <rect x="48" y="10" width="8" height="3" rx="1.5" fill="#ffd84d" transform="rotate(-25 52 11)"/>
+            <rect x="76" y="5" width="8" height="3" rx="1.5" fill="#6fd3ff" transform="rotate(35 80 6)"/>
+            <rect x="98" y="11" width="8" height="3" rx="1.5" fill="#fff6e6" transform="rotate(-10 102 12)"/>
+          </g>
+        </defs>
+        <use href="#stick" transform="translate(-40 118) rotate(-22)"/>
+        <use href="#stick" transform="translate(236 -18) rotate(34)"/>
+        <use href="#stick" transform="translate(262 150) rotate(-64)"/>
+        <text x="170" y="88" text-anchor="middle" class="art-num">11.11</text>
+      </svg>
+    </div>
+    <div class="perf" aria-hidden="true"></div>
+    <div class="ticket-body">
+      <p class="shop">막대상회</p>
+      <h2 class="item">랜덤 막대과자 1개</h2>
+      <dl>
+        <div><dt>유효기간</dt><dd>2026.11.11 23:59</dd></div>
+        <div><dt>교환처</dt><dd>전국 마음속 편의점</dd></div>
+        <div><dt>맛</dt><dd>아몬드·누드·딸기·화이트·기본 중 1</dd></div>
+      </dl>
+      <svg id="barcode" class="barcode" viewBox="0 0 296 60" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <p class="code">1111 1111 1111 1111</p>
+    </div>
+  </article>
+
+  <button id="claim" class="claim" type="button">받기</button>
+  <p class="fine">받기를 누르면 바로 사용 처리돼요</p>
+</main>
+
+<section id="party" class="party" data-type="yalal" hidden aria-label="빼빼로 수령 결과">
+  <div class="rays" aria-hidden="true"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div id="stage" class="stage">
+    <div id="bubble" class="bubble"><span id="bubbleText">…?!</span></div>
+    <button id="actor" class="actor" type="button" aria-label="빼빼로 건드리기">
+      <svg viewBox="0 0 200 400" aria-hidden="true">
+        <!-- 다리, 팔 (몸 뒤) -->
+        <g id="legL">
+          <path d="M90 328 L84 376" stroke="#d9a35e" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <ellipse cx="78" cy="380" rx="15" ry="8" fill="#ff4f8b" stroke="#2b150d" stroke-width="3"/>
+        </g>
+        <g id="legR">
+          <path d="M110 328 L116 376" stroke="#d9a35e" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <ellipse cx="122" cy="380" rx="15" ry="8" fill="#ff4f8b" stroke="#2b150d" stroke-width="3"/>
+        </g>
+        <g id="armL">
+          <path d="M74 168 L30 192" stroke="#d9a35e" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <circle cx="26" cy="194" r="10" fill="#f0c27b" stroke="#2b150d" stroke-width="3"/>
+        </g>
+        <g id="armR">
+          <path d="M126 168 L170 192" stroke="#d9a35e" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <circle cx="174" cy="194" r="10" fill="#f0c27b" stroke="#2b150d" stroke-width="3"/>
+        </g>
+
+        <!-- 몸통: 아몬드 · 딸기 · 화이트 (보통 굵기) -->
+        <g data-show="yalal crying sleepy">
+          <rect x="68" y="40" width="64" height="296" rx="32" fill="#f0c27b" stroke="#2b150d" stroke-width="4"/>
+          <g fill="#d9a35e">
+            <circle cx="88" cy="290" r="2.2"/><circle cx="110" cy="304" r="2.2"/>
+            <circle cx="96" cy="318" r="2.2"/><circle cx="116" cy="284" r="2.2"/>
+          </g>
+          <path class="coat" d="M68 68 Q68 26 100 26 Q132 26 132 68 L132 254 Q132 266 125 266 Q118 266 118 256 Q116 280 108 280 Q100 280 100 262 Q98 272 91 272 Q84 272 84 260 Q82 270 75 270 Q68 270 68 258 Z"
+                stroke="#2b150d" stroke-width="4" stroke-linejoin="round"/>
+          <path class="coat-hi" d="M80 62 Q82 42 96 38" stroke-width="5" stroke-linecap="round" fill="none"/>
+        </g>
+        <!-- 몸통: 기본 (얇음!) -->
+        <g data-show="flex">
+          <rect x="83" y="40" width="34" height="296" rx="17" fill="#f0c27b" stroke="#2b150d" stroke-width="4"/>
+          <g fill="#d9a35e"><circle cx="95" cy="292" r="2"/><circle cx="106" cy="308" r="2"/><circle cx="97" cy="322" r="2"/></g>
+          <path class="coat" d="M83 60 Q83 26 100 26 Q117 26 117 60 L117 254 Q117 264 112 264 Q107 264 107 256 Q105 274 100 274 Q95 274 94 258 Q92 266 88 266 Q83 266 83 256 Z"
+                stroke="#2b150d" stroke-width="4" stroke-linejoin="round"/>
+          <path class="coat-hi" d="M89 60 Q90 44 96 38" stroke-width="4" stroke-linecap="round" fill="none"/>
+        </g>
+        <!-- 몸통: 누드 (과자가 겉, 초코가 속) -->
+        <g data-show="nude">
+          <path d="M68 58 L68 304 Q68 336 100 336 Q132 336 132 304 L132 58 Z" fill="#f0c27b" stroke="#2b150d" stroke-width="4" stroke-linejoin="round"/>
+          <ellipse cx="100" cy="58" rx="32" ry="11" fill="#e2a95f" stroke="#2b150d" stroke-width="4"/>
+          <ellipse cx="100" cy="58" rx="17" ry="5.5" fill="#4a2717"/>
+          <g fill="#d9a35e">
+            <circle cx="118" cy="142" r="2.2"/><circle cx="84" cy="172" r="2.2"/><circle cx="116" cy="192" r="2.2"/>
+            <circle cx="80" cy="214" r="2.2"/><circle cx="94" cy="232" r="2.2"/><circle cx="112" cy="262" r="2.2"/>
+            <circle cx="86" cy="296" r="2.2"/><circle cx="108" cy="316" r="2.2"/>
+          </g>
+          <path d="M77 160 L77 260" stroke="#ffe0a8" stroke-width="5" stroke-linecap="round"/>
+        </g>
+
+        <!-- 토핑 -->
+        <g data-show="yalal" fill="#e9c48f" stroke="#2b150d" stroke-width="2" stroke-linejoin="round">
+          <path d="M78 192 l11 -5 l4 9 l-11 4 z"/>
+          <path d="M108 206 l10 2 l-2 10 l-10 -3 z"/>
+          <path d="M86 234 l9 -6 l5 8 l-9 5 z"/>
+          <path d="M112 244 l9 1 l-1 9 l-9 -2 z"/>
+          <path d="M98 176 l8 -2 l2 7 l-8 2 z"/>
+          <path d="M108 44 l9 -3 l2 8 l-9 3 z"/>
+        </g>
+        <g data-show="crying" fill="#d81b4f">
+          <circle cx="84" cy="196" r="3"/><circle cx="112" cy="210" r="2.6"/><circle cx="94" cy="232" r="3"/>
+          <circle cx="116" cy="244" r="2.6"/><circle cx="102" cy="186" r="2.2"/><circle cx="80" cy="222" r="2.2"/>
+          <circle cx="114" cy="48" r="2.6"/>
+        </g>
+        <g data-show="sleepy" fill="#5a3522">
+          <path d="M80 196 l6 -2 l2 5 l-6 2 z"/><path d="M108 208 l5 1 l-1 5 l-5 -1 z"/>
+          <path d="M88 232 l5 -3 l3 4 l-5 3 z"/><path d="M114 242 l5 0 l0 5 l-5 0 z"/>
+          <circle cx="98" cy="214" r="2"/><circle cx="120" cy="222" r="1.6"/><circle cx="82" cy="250" r="1.6"/>
+        </g>
+
+        <!-- 소품 -->
+        <g data-show="sleepy">
+          <path d="M62 62 Q64 22 104 14 Q148 8 170 40 Q142 26 126 36 Q136 48 138 62 Q100 50 62 62 Z" fill="#6c63ff" stroke="#2b150d" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M58 58 Q100 44 142 58 L142 72 Q100 58 58 72 Z" fill="#fff6e6" stroke="#2b150d" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="172" cy="42" r="11" fill="#fff6e6" stroke="#2b150d" stroke-width="4"/>
+        </g>
+        <g data-show="flex">
+          <path d="M85 172 Q100 200 115 172" stroke="#ffd34d" stroke-width="5" stroke-linecap="round" stroke-dasharray="5 4" fill="none"/>
+          <circle cx="100" cy="192" r="11" fill="#ffd34d" stroke="#2b150d" stroke-width="3"/>
+          <text x="100" y="196" text-anchor="middle" font-size="10" font-weight="700" font-family="sans-serif" fill="#2b150d">11</text>
+        </g>
+
+        <!-- 얼굴 -->
+        <path id="browL" d="M72 78 L96 68" stroke="#1a0b06" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path id="browR" d="M128 78 L104 68" stroke="#1a0b06" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+        <g id="eyesGoogly" data-show="yalal">
+          <circle cx="85" cy="100" r="17" fill="#fff" stroke="#1a0b06" stroke-width="3"/>
+          <circle cx="115" cy="100" r="17" fill="#fff" stroke="#1a0b06" stroke-width="3"/>
+          <circle id="pupL" cx="85" cy="100" r="7" fill="#1a0b06"/>
+          <circle id="pupR" cx="115" cy="100" r="7" fill="#1a0b06"/>
+        </g>
+        <g id="eyesClosed" data-show="sleepy" stroke="#1a0b06" stroke-width="4" stroke-linecap="round" fill="none">
+          <path d="M72 100 Q85 109 98 100"/><path d="M102 100 Q115 109 128 100"/>
+        </g>
+        <g data-show="crying">
+          <circle cx="85" cy="100" r="18" fill="#fff" stroke="#1a0b06" stroke-width="3"/>
+          <circle cx="115" cy="100" r="18" fill="#fff" stroke="#1a0b06" stroke-width="3"/>
+          <circle cx="86" cy="103" r="11" fill="#1a0b06"/><circle cx="114" cy="103" r="11" fill="#1a0b06"/>
+          <circle cx="90" cy="98" r="4" fill="#fff"/><circle cx="118" cy="98" r="4" fill="#fff"/>
+          <circle cx="82" cy="108" r="2" fill="#fff"/><circle cx="110" cy="108" r="2" fill="#fff"/>
+        </g>
+        <g data-show="flex">
+          <rect x="62" y="86" width="36" height="26" rx="9" fill="#111" stroke="#2b150d" stroke-width="2"/>
+          <rect x="102" y="86" width="36" height="26" rx="9" fill="#111" stroke="#2b150d" stroke-width="2"/>
+          <path d="M96 93 L104 93" stroke="#111" stroke-width="4"/>
+          <path d="M68 92 L80 92 M108 92 L120 92" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+        </g>
+        <g data-show="nude" stroke="#1a0b06" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M76 91 L92 100 L76 109"/><path d="M124 91 L108 100 L124 109"/>
+        </g>
+
+        <g data-show="yalal crying sleepy">
+          <ellipse cx="72" cy="130" rx="7" ry="4" fill="#ff74a4" opacity=".75"/>
+          <ellipse cx="128" cy="130" rx="7" ry="4" fill="#ff74a4" opacity=".75"/>
+        </g>
+        <g data-show="nude">
+          <ellipse cx="78" cy="126" rx="12" ry="7" fill="#ff6b8a" opacity=".8"/>
+          <ellipse cx="122" cy="126" rx="12" ry="7" fill="#ff6b8a" opacity=".8"/>
+          <path d="M71 129 l4 -7 M77 130 l4 -7 M83 129 l4 -7 M115 129 l4 -7 M121 130 l4 -7 M127 129 l4 -7" stroke="#d4365c" stroke-width="2" stroke-linecap="round"/>
+        </g>
+
+        <g id="m-yalal" data-show="yalal">
+          <ellipse cx="100" cy="150" rx="14" ry="15" fill="#6b0f2a" stroke="#1a0b06" stroke-width="3"/>
+          <ellipse cx="100" cy="158" rx="8" ry="4.5" fill="#ff74a4"/>
+        </g>
+        <g id="m-nude" data-show="nude">
+          <path d="M86 150 q3.5 -5 7 0 q3.5 5 7 0 q3.5 -5 7 0 q3.5 5 7 0" stroke="#1a0b06" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </g>
+        <g id="m-crying" data-show="crying">
+          <path d="M80 164 Q100 126 120 164 Q100 156 80 164 Z" fill="#6b0f2a" stroke="#1a0b06" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+        <g id="m-sleepy" data-show="sleepy">
+          <ellipse cx="100" cy="150" rx="7" ry="6" fill="#6b0f2a" stroke="#1a0b06" stroke-width="3"/>
+          <path d="M106 154 q5 10 0 16 q-5 -3 0 -16z" fill="#bfe8ff" stroke="#2b150d" stroke-width="1.5"/>
+        </g>
+        <g id="m-flex" data-show="flex">
+          <path d="M89 146 Q101 157 112 142" stroke="#1a0b06" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <rect x="98" y="151" width="6" height="6" rx="1.5" fill="#ffd34d" stroke="#2b150d" stroke-width="1.5"/>
+        </g>
+
+        <g data-show="crying" stroke="#8fd0ff" stroke-width="7" stroke-linecap="round" fill="none">
+          <path class="tear" d="M76 116 Q70 140 76 162 Q82 184 74 204"/>
+          <path class="tear" d="M124 116 Q130 140 124 162 Q118 184 126 204"/>
+        </g>
+        <g data-show="yalal">
+          <path class="sweat" d="M146 62 q7 11 0 15 q-7 -4 0 -15z" fill="#bfe8ff" stroke="#2b150d" stroke-width="2"/>
+          <path class="sweat s2" d="M52 82 q6 9 0 13 q-6 -4 0 -13z" fill="#bfe8ff" stroke="#2b150d" stroke-width="2"/>
+        </g>
+      </svg>
+    </button>
+  </div>
+
+  <div id="result" class="result">
+    <p id="resultKicker" class="result-kicker">축하합니다! 아몬드 빼빼로 당첨</p>
+    <p id="resultTitle" class="result-title" aria-live="polite">야랄떠는 빼빼로 1개 수령 완료</p>
+    <p class="result-fine">교환 불가 · 환불 불가 · <span id="resultNo">진정</span> 불가<br>빼빼로를 눌러보세요 · 총 5종</p>
+    <div class="result-actions">
+      <button id="again" class="btn btn-main" type="button">다시 받기</button>
+      <button id="mute" class="btn btn-ghost" type="button">소리 끄기</button>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const gift = $('gift'), party = $('party'), claim = $('claim'), ticket = $('ticket');
+  const stage = $('stage'), actor = $('actor'), bubble = $('bubble'), bubbleText = $('bubbleText');
+  const result = $('result'), canvas = $('fx'), g2 = canvas.getContext('2d');
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  /* 바코드 (장식용) */
+  (() => {
+    let s = 1111;
+    const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+    let x = 0, out = '';
+    while (x < 296) {
+      const w = 1 + Math.floor(r() * 3.5);
+      if (r() > .42) out += `<rect x="${x}" y="0" width="${w}" height="60"/>`;
+      x += w + (r() > .5 ? 1 : 0);
+    }
+    $('barcode').innerHTML = out;
+  })();
+
+  /* ---------- 소리: 파일 없이 합성 ---------- */
+  let ac = null, muted = false;
+  function audio() {
+    if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ac = null; } }
+    if (ac && ac.state === 'suspended') ac.resume().catch(() => {});
+    return ac;
+  }
+  function tone({ type = 'square', f0, f1 = f0, dur, vol = .05, vib = 0 }) {
+    if (muted) return;
+    const c = audio(); if (!c) return;
+    const t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    if (vib) {
+      const l = c.createOscillator(), lg = c.createGain();
+      l.frequency.value = vib; lg.gain.value = f0 * .08;
+      l.connect(lg).connect(o.frequency); l.start(t); l.stop(t + dur);
+    }
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + .02);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(c.destination);
+    o.start(t); o.stop(t + dur + .03);
+  }
+  function noise({ dur, vol, hp }) {
+    if (muted) return;
+    const c = audio(); if (!c) return;
+    const len = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    src.buffer = buf; f.type = 'highpass'; f.frequency.value = hp; g.gain.value = vol;
+    src.connect(f).connect(g).connect(c.destination); src.start();
+  }
+  const later = (ms, fn) => setTimeout(fn, ms);
+  const SFX = {
+    none:    () => {},
+    rattle:  () => { for (let i = 0; i < 7; i++) later(i * 95, () => tone({ f0: 140 + i * 25, f1: 90, dur: .05, vol: .04 })); },
+    pop:     () => tone({ type: 'triangle', f0: 200, f1: 1300, dur: .25, vol: .08 }),
+    zip:     () => tone({ type: 'triangle', f0: 1400, f1: 200, dur: .3, vol: .07 }),
+    boing:   () => tone({ type: 'sine', f0: 160, f1: 540, dur: .2, vol: .1 }),
+    scream:  () => tone({ type: 'sawtooth', f0: 650, f1: 1300, dur: .55, vol: .04, vib: 22 }),
+    whistle: () => tone({ type: 'triangle', f0: 250, f1: 1700, dur: .7, vol: .07 }),
+    beeps:   () => [0, 110, 220].forEach((d, i) => later(d, () => tone({ f0: 880 + i * 110, dur: .07, vol: .035 }))),
+    groan:   () => tone({ type: 'sawtooth', f0: 240, f1: 80, dur: .8, vol: .05, vib: 8 }),
+    eek:     () => { tone({ type: 'triangle', f0: 900, f1: 1500, dur: .12, vol: .07 }); later(140, () => tone({ type: 'triangle', f0: 1000, f1: 1800, dur: .16, vol: .07 })); },
+    snore:   () => tone({ type: 'sawtooth', f0: 85, f1: 60, dur: .9, vol: .05, vib: 28 }),
+    thud:    () => tone({ type: 'sine', f0: 140, f1: 40, dur: .25, vol: .18 }),
+    startle: () => tone({ type: 'triangle', f0: 400, f1: 1800, dur: .18, vol: .08 }),
+    tick:    () => tone({ f0: 900, dur: .04, vol: .03 }),
+    ching:   () => { tone({ f0: 1318, dur: .08, vol: .035 }); later(90, () => tone({ f0: 1760, dur: .3, vol: .035 })); },
+    sparkle: () => [1568, 2093, 2637, 3136].forEach((f, i) => later(i * 60, () => tone({ type: 'triangle', f0: f, dur: .15, vol: .05 }))),
+    wail:    () => tone({ type: 'sine', f0: 620, f1: 330, dur: 1, vol: .07, vib: 6 }),
+    sniff:   () => [0, 140].forEach((d) => later(d, () => noise({ dur: .08, vol: .05, hp: 2000 }))),
+  };
+
+  /* ---------- 빼빼로 5종 ---------- */
+  const TYPES = {
+    yalal: {
+      flavor: '아몬드', name: '야랄떠는 빼빼로', no: '진정', enter: '…?!', coat: '#4a2717',
+      jitter: true, brows: ['M72 78 L96 68', 'M128 78 L104 68'], browWiggle: 3,
+      rain: { kind: 'stick', rate: 6 }, burst: ['spr', 'spr', 'spr', 'stick'],
+      modes: {
+        flail: { sfx: 'scream',  lines: ['으아아아아악!!', '살려줘!!!', '나 먹지 마!!!', '진정이 안 돼!!'] },
+        spin:  { sfx: 'whistle', lines: ['빼빼빼빼빼빼', '어지러워어어', '돌아버리겠네!!'] },
+        jump:  { sfx: 'none',    lines: ['빼! 빼! 로!', '11월 11일이다!!', '아몬드 떨어진다!!'] },
+        run:   { sfx: 'beeps',   lines: ['초코 녹는다!!', '잡아봐라~~', '도망가자!!!'] },
+        zoom:  { sfx: 'groan',   lines: ['너 나 받았지?', '이제 책임져', '왜 쳐다봐!!!'], burst: true },
+      },
+    },
+    nude: {
+      flavor: '누드', name: '옷 잃어버린 빼빼로', no: '옷 입히기', enter: '앗…!', coat: '#d9a35e',
+      jitter: false, brows: ['M74 82 L94 74', 'M126 82 L106 74'], browWiggle: 1.5,
+      rain: { kind: 'stick', rate: 5 }, burst: ['spr', 'spr', 'stick'], tap: 'squeal',
+      modes: {
+        cover:  { sfx: 'none', dur: [1.6, 2.2], lines: ['보지 마…!!', '나 옷 잃어버렸어…', '부끄러워 죽겠네…'] },
+        flee:   { sfx: 'eek',  dur: [1.3, 1.8], lines: ['꺄아아악!!', '아무도 보지 마!!', '내 초코 옷 어디 갔어!!'], move: 'run' },
+        squeal: { sfx: 'eek',  dur: [1, 1],     lines: ['꺄악!!', '어딜 봐!!', '노크 좀 해!!'] },
+        peek:   { sfx: 'none', dur: [1.4, 1.9], lines: ['…아직 봐?', '초코는 속에 있어', '속이 꽉 찬 타입이야'] },
+      },
+    },
+    crying: {
+      flavor: '딸기', name: '질질 짜는 빼빼로', no: '위로', enter: '흑…', coat: '#ff9ec4',
+      jitter: false, brows: ['M72 82 L96 66', 'M128 82 L104 66'], browWiggle: 2,
+      rain: { kind: 'drop', rate: 14 }, burst: ['drop', 'spr'],
+      modes: {
+        sob:     { sfx: 'sniff', dur: [1.6, 2.4], lines: ['흑흑… 나만 솔로야', '다들 커플이야…', '흐어엉…'] },
+        wail:    { sfx: 'wail',  dur: [1.4, 2],   lines: ['으아앙 엄마아!!', '나도 선물 받고 싶어!!', '코가 딸기처럼 빨개져…'] },
+        slump:   { sfx: 'none',  dur: [1.8, 2.4], lines: ['나도 누가 사줬으면…', '딸기잼 될 때까지 울 거야', '괜찮아… 안 괜찮아'] },
+        runaway: { sfx: 'wail',  dur: [1.2, 1.6], lines: ['보지 마!!', '혼자 있을래!!'], move: 'run' },
+      },
+    },
+    sleepy: {
+      flavor: '화이트', name: '꿀잠 자는 빼빼로', no: '기상', enter: '…음냐', coat: '#f4ecda',
+      jitter: false, brows: ['M74 84 Q85 80 96 84', 'M104 84 Q115 80 126 84'], browWiggle: 0,
+      rain: { kind: 'star', rate: 3 }, burst: ['star', 'star', 'spr'],
+      order: ['doze', 'doze', 'nod', 'flop', 'startle'], tap: 'startle',
+      modes: {
+        doze:    { sfx: 'snore',   dur: [2.2, 3.2], lines: ['zzZ…', '5분만…', '깨우지 마…', '음냐음냐…'] },
+        nod:     { sfx: 'none',    dur: [1.8, 1.8], lines: ['꾸벅…', '어… 나 안 잤어', '…'] },
+        flop:    { sfx: 'none',    dur: [1.8, 2.6], lines: ['털썩', '여기서 잘게…', '바닥 시원하다…'], next: 'startle' },
+        startle: { sfx: 'startle', dur: [1, 1],     lines: ['헉! 안 잤어!!', '나 부른 거야?!', '지각이다!!'] },
+      },
+    },
+    flex: {
+      flavor: '기본', name: '근본 넘치는 빼빼로', no: '겸손', enter: '원조 등장', coat: '#4a2717',
+      jitter: false, brows: ['M84 78 L97 80', 'M103 74 Q110 66 117 72'], browWiggle: 0, armDx: 9,
+      rain: { kind: 'coin', rate: 7 }, burst: ['coin', 'star', 'spr'],
+      modes: {
+        strut:   { sfx: 'ching',   dur: [2, 2.8],   lines: ['얇은 게 근본이지', '원조 지나간다~', '두께는 거들 뿐'] },
+        pose:    { sfx: 'sparkle', dur: [1.3, 1.8], lines: ['이 얇은 두께 봐', '원조는 나 하나야', '얇아서 더 바삭해'] },
+        shine:   { sfx: 'sparkle', dur: [1.6, 1.6], lines: ['반짝반짝 근본 광택', '눈부시지?'] },
+        closeup: { sfx: 'ching',   dur: [1.3, 1.8], lines: ['짝퉁들은 비켜', '사인해 줄까?', '나 없인 빼빼로데이 없어'] },
+      },
+    },
+  };
+  const IDS = Object.keys(TYPES);
+  const INTENSE = new Set(['spin', 'zoom', 'flop', 'shine', 'runaway', 'flee']);
+
+  /* ---------- 몸짓 ---------- */
+  const M = {
+    flail(o, s) {
+      o.x = Math.sin(s.T * 41) * 7 + rand(-3, 3); o.y = Math.sin(s.T * 33) * 4; o.r = Math.sin(s.T * 23) * 9;
+      o.aL = 20 + Math.sin(s.T * 27) * 85; o.aR = -20 - Math.sin(s.T * 27 + 1.3) * 85;
+      o.lL = Math.sin(s.T * 31) * 25; o.lR = -Math.sin(s.T * 29) * 25;
+      o.mo = .9 + Math.abs(Math.sin(s.T * 16)) * .7;
+    },
+    spin(o, s) {
+      o.r = s.lt * 1080; o.y = -Math.abs(Math.sin(s.lt * 7)) * 30;
+      o.aL = 30; o.aR = -30; o.lL = 30; o.lR = -30; o.mo = 1.3;
+    },
+    jump(o, s) {
+      const ph = s.lt * 2.3, k = Math.floor(ph), p = ph - k;
+      if (s.newCycle(k)) SFX.boing();
+      o.y = -4 * p * (1 - p) * s.H * .32;
+      if (p < .1 || p > .9) { o.sx = 1.25; o.sy = .8; } else { o.sx = .92; o.sy = 1.08; }
+      o.aL = 130 + Math.sin(s.T * 30) * 20; o.aR = -130 - Math.sin(s.T * 30) * 20;
+      o.lL = p < .5 ? -25 : 20; o.lR = -o.lL; o.mo = 1.2;
+    },
+    run(o, s) {
+      o.x = Math.sin(s.lt * 3.2) * s.W * .3; o.face = Math.cos(s.lt * 3.2) >= 0 ? 1 : -1;
+      o.r = o.face * 14; o.y = -Math.abs(Math.sin(s.T * 16)) * 14;
+      o.lL = Math.sin(s.T * 24) * 45; o.lR = -o.lL; o.aL = Math.sin(s.T * 24) * 60; o.aR = o.aL; o.mo = 1.1;
+      if (s.type === TYPES.nude) { o.aL = 105; o.aR = -105; }
+      if (s.type === TYPES.crying && s.every('tear', .06)) s.fromEyes(1, 200);
+    },
+    zoom(o, s) {
+      const p = Math.min(1, s.lt / .35);
+      o.sx = o.sy = 1 + .8 * p; o.y = s.H * .05 * p;
+      o.x = rand(-4, 4); o.r = rand(-4, 4); o.shake = 9 * p;
+      o.aL = 60 + rand(-25, 25); o.aR = -60 + rand(-25, 25); o.mo = 1.6;
+    },
+    cover(o, s) {
+      const j = Math.sin(s.T * 30);
+      o.x = j * 2; o.r = Math.sin(s.T * 2) * 5; o.sy = .94; o.y = s.H * .02;
+      o.aL = 105 + j * 4; o.aR = -105 - j * 4; o.lL = 12; o.lR = -12;
+    },
+    squeal(o, s) {
+      const p = Math.min(1, s.lt / .45);
+      o.y = -Math.sin(p * Math.PI) * s.H * .16; o.x = rand(-3, 3);
+      o.aL = 105; o.aR = -105; o.lL = -25; o.lR = 25; o.mo = 1.3;
+    },
+    peek(o, s) {
+      const p = Math.min(1, s.lt / .4), e = 1 - Math.pow(1 - p, 3);
+      o.sx = o.sy = 1 + .35 * e; o.y = s.H * .04 * e; o.r = -10 * e;
+      o.aL = 105; o.aR = -50 + Math.sin(s.T * 12) * 25;
+    },
+    doze(o, s) {
+      o.r = Math.sin(s.T * 1.2) * 8; o.y = Math.sin(s.T * 2.4) * 4;
+      o.aL = -40; o.aR = 40; o.lL = 6; o.lR = -6; o.mo = .8 + .3 * Math.sin(s.T * 2.4);
+      if (s.every('z', .7)) s.fromHead(1);
+    },
+    nod(o, s) {
+      const p = s.lt < 1.4 ? s.lt / 1.4 : Math.max(0, 1 - (s.lt - 1.4) / .15);
+      if (s.lt >= 1.4 && s.once('snap')) SFX.tick();
+      o.r = 28 * p * p; o.aL = -40; o.aR = 40; o.mo = .8;
+      if (s.every('z', .9)) s.fromHead(1);
+    },
+    flop(o, s) {
+      const p = Math.min(1, s.lt / .45), e = p * p;
+      o.r = 84 * e; o.y = s.H * .14 * e; o.aL = -10; o.aR = 10; o.mo = .8;
+      if (p >= 1 && s.once('land')) { SFX.thud(); s.kick(.15); }
+      if (p >= 1 && s.every('z', .8)) s.fromHead(1);
+    },
+    startle(o, s) {
+      const p = Math.min(1, s.lt / .45);
+      o.y = -Math.sin(p * Math.PI) * s.H * .18; o.x = rand(-3, 3);
+      o.aL = 130; o.aR = -130; o.lL = -20; o.lR = 20; o.mo = 1.5; o.awake = true;
+    },
+    strut(o, s) {
+      o.x = Math.sin(s.lt * 1.6) * s.W * .22; o.face = Math.cos(s.lt * 1.6) >= 0 ? 1 : -1;
+      const b = Math.sin(s.T * 6.5);
+      o.y = -Math.abs(b) * 10; o.r = b * 6; o.lL = b * 30; o.lR = -o.lL; o.aL = 10 + b * 25; o.aR = -10 + b * 25;
+    },
+    pose(o, s) {
+      const pl = Math.sin(s.T * 10);
+      o.aL = 100 + pl * 8; o.aR = -100 - pl * 8; o.sx = o.sy = 1.08 + .03 * pl; o.lL = 18; o.lR = -18;
+      if (s.every('spark', .15)) s.fromBody(2);
+    },
+    shine(o, s) {
+      const p = Math.min(1, s.lt / s.dur);
+      o.r = (1 - Math.cos(p * Math.PI)) / 2 * 360; o.y = -12; o.aL = 40; o.aR = -40;
+      if (s.every('spark', .08)) s.fromBody(2);
+    },
+    closeup(o, s) {
+      const p = Math.min(1, s.lt / .4), e = 1 - Math.pow(1 - p, 3);
+      o.sx = o.sy = 1 + .45 * e; o.y = s.H * .04 * e; o.r = -8 * e; o.aL = 10; o.aR = -70;
+    },
+    sob(o, s) {
+      const j = Math.abs(Math.sin(s.T * 14));
+      o.y = -j * 6; o.r = Math.sin(s.T * 3) * 3; o.aL = 105 + j * 6; o.aR = -105 - j * 6; o.mo = .8 + j * .3;
+      if (s.every('tear', .25)) s.fromEyes(1, 60);
+    },
+    wail(o, s) {
+      o.r = -6 + Math.sin(s.T * 4) * 4; o.y = Math.sin(s.T * 20) * 2;
+      o.aL = -20 + Math.sin(s.T * 9) * 30; o.aR = 20 - Math.sin(s.T * 9) * 30;
+      o.lL = Math.sin(s.T * 12) * 15; o.lR = -o.lL; o.mo = 1.4 + Math.sin(s.T * 30) * .12;
+      if (s.every('tear', .05)) s.fromEyes(2, 260);
+    },
+    slump(o, s) {
+      o.sx = 1.05; o.sy = .9; o.y = s.H * .04; o.r = Math.sin(s.T * 1.5) * 5; o.aL = -45; o.aR = 45; o.mo = .7;
+      if (s.every('tear', .5)) s.fromEyes(1, 40);
+    },
+  };
+
+  /* ---------- 상태 ---------- */
+  const P = {
+    armL: $('armL'), armR: $('armR'), legL: $('legL'), legR: $('legR'),
+    pupL: $('pupL'), pupR: $('pupR'), browL: $('browL'), browR: $('browR'),
+    eyesGoogly: $('eyesGoogly'), eyesClosed: $('eyesClosed'),
+  };
+  let type = TYPES.yalal, typeId = 'yalal', pendingId = null, mouthEl = $('m-yalal');
+  let raf = 0, running = false, last = 0, T = 0;
+  let mode = 'enter', modeStart = 0, modeDur = .7, lastCycle = -1, timers = {}, flags = {};
+  let shakeUntil = 0, pupilTimer = 0, rainAcc = 0, wasAwake = false;
+  let pos = { x: 0, y: 0, s: 1 };
+  let parts = [];
+
+  function say(text) {
+    bubbleText.textContent = text;
+    bubbleText.classList.remove('pop'); void bubbleText.offsetWidth; bubbleText.classList.add('pop');
+  }
+  function setBrows([l, r]) { P.browL.setAttribute('d', l); P.browR.setAttribute('d', r); }
+  function setAwake(on) {
+    wasAwake = on;
+    P.eyesGoogly.style.display = on ? 'inline' : '';
+    P.eyesClosed.style.display = on ? 'none' : '';
+    setBrows(on ? TYPES.yalal.brows : type.brows);
+  }
+
+  function applyType(id) {
+    typeId = id; type = TYPES[id];
+    party.dataset.type = id;
+    mouthEl = $('m-' + id);
+    setAwake(false);
+    P.pupL.setAttribute('cx', 85); P.pupL.setAttribute('cy', 100);
+    P.pupR.setAttribute('cx', 115); P.pupR.setAttribute('cy', 100);
+    $('resultKicker').textContent = `축하합니다! ${type.flavor} 빼빼로 당첨`;
+    $('resultTitle').textContent = `${type.name} 1개 수령 완료`;
+    $('resultNo').textContent = type.no;
+    result.style.animation = 'none'; void result.offsetWidth; result.style.animation = '';
+  }
+
+  function setMode(next) {
+    const cfg = type.modes[next];
+    mode = next; modeStart = T; lastCycle = -1; timers = {}; flags = {};
+    modeDur = rand(...(cfg.dur || [1.1, 1.8]));
+    say(pick(cfg.lines));
+    SFX[cfg.sfx]();
+    if (cfg.burst) burstAtActor(50);
+  }
+  function nextMode() {
+    const cur = type.modes[mode];
+    if (cur && cur.next && !(reduce && INTENSE.has(cur.next))) return setMode(cur.next);
+    const pool = (type.order || Object.keys(type.modes)).filter((m) => !(reduce && INTENSE.has(m)));
+    let n; do { n = pick(pool); } while (n === mode && new Set(pool).size > 1);
+    setMode(n);
+  }
+  function randomId(exclude) { return pick(IDS.filter((i) => i !== exclude)); }
+
+  function begin(id) {
+    applyType(id);
+    mode = 'enter'; modeStart = T; modeDur = .7; timers = {}; flags = {};
+    say(type.enter);
+    burst(party.clientWidth / 2, party.clientHeight * .5, 140);
+    SFX.pop();
+  }
+
+  /* ---------- 파티클 ---------- */
+  const SPR = ['#fff6e6', '#2b150d', '#ffd84d', '#6fd3ff', '#f0c27b'];
+  function resize() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = party.clientWidth * dpr; canvas.height = party.clientHeight * dpr;
+    g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function spawn(k, x, y, o = {}) {
+    if (parts.length > 380) return;
+    const p = { k, x, y, vx: 0, vy: 0, g: 700, vmax: 520, rot: rand(0, 6.28), vr: rand(-6, 6),
+                life: 3, size: 1, c: pick(SPR), fade: false, seed: rand(0, 6.28), ...o };
+    p.max = p.life;
+    parts.push(p);
+  }
+  function burst(cx, cy, n) {
+    if (reduce) n = Math.ceil(n / 4);
+    for (let i = 0; i < n; i++) {
+      const a = rand(-Math.PI * .95, -Math.PI * .05), v = rand(250, 750), k = pick(type.burst);
+      spawn(k, cx, cy, {
+        vx: Math.cos(a) * v, vy: Math.sin(a) * v, vr: rand(-10, 10), life: rand(2.5, 4),
+        c: k === 'stick' ? type.coat : k === 'drop' ? '#e8f4ff' : k === 'star' ? pick(['#fff', '#ffe58a']) : pick(SPR),
+      });
+    }
+  }
+  function geom() {
+    const aw = actor.offsetWidth * pos.s;
+    return { aw, cx: party.clientWidth / 2 + pos.x, cy: stage.offsetTop + stage.clientHeight / 2 + pos.y };
+  }
+  function burstAtActor(n) { const { cx, cy } = geom(); burst(cx, cy, n); }
+  function fromHead(n) {
+    const { aw, cx, cy } = geom();
+    for (let i = 0; i < n; i++) spawn('z', cx + aw * .3, cy - aw * .85, { vx: rand(20, 50), vy: rand(-60, -40), g: 0, vr: 0, rot: 0, life: 2.4, fade: true });
+  }
+  function fromEyes(n, speed) {
+    const { aw, cx, cy } = geom();
+    for (let i = 0; i < n; i++) for (const side of [-1, 1]) {
+      spawn('drop', cx + side * aw * .1, cy - aw * .45, {
+        vx: side * rand(.6, 1.2) * speed, vy: -rand(.3, 1) * speed - 40, g: 900, vmax: 700,
+        vr: 0, rot: 0, life: 1.4, c: '#9fd6ff', size: rand(.6, 1),
+      });
+    }
+  }
+  function fromBody(n) {
+    const { aw, cx, cy } = geom();
+    for (let i = 0; i < n; i++) {
+      spawn('star', cx + rand(-.8, .8) * aw, cy + rand(-1, 1) * aw, {
+        vx: rand(-30, 30), vy: rand(-60, -20), g: 0, life: .8, fade: true, c: '#fffbe0', size: rand(.8, 1.6),
+      });
+    }
+  }
+  function rain() {
+    const x = rand(0, party.clientWidth), k = type.rain.kind;
+    if (k === 'stick') spawn('stick', x, -40, { vx: rand(-30, 30), vy: rand(60, 180), g: 400, vmax: 320, vr: rand(-4, 4), life: 9, c: type.coat });
+    else if (k === 'star') spawn('star', x, -20, { vx: rand(-10, 10), vy: rand(20, 50), g: 0, vr: rand(-1, 1), life: 14, c: pick(['#fff', '#ffe58a', '#c9c3ff']), size: rand(.6, 1.2) });
+    else if (k === 'coin') spawn('coin', x, -30, { vx: rand(-20, 20), vy: rand(100, 200), g: 500, vmax: 420, vr: rand(4, 10), life: 9 });
+    else if (k === 'drop') spawn('drop', x, -20, { vy: rand(380, 520), g: 0, vr: 0, rot: 0, life: 4, c: '#eaf4ff', size: rand(.6, 1) });
+    else spawn('spr', x, -20, { vx: rand(-20, 20), vy: rand(80, 160), g: 400, vmax: 300, life: 9 });
+  }
+  function star(r) {
+    g2.beginPath();
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4 - Math.PI / 2, rr = i % 2 ? r * .35 : r;
+      g2.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+    }
+    g2.closePath(); g2.fill();
+  }
+  function drawParts(dt) {
+    const w = party.clientWidth, h = party.clientHeight;
+    g2.clearRect(0, 0, w, h);
+    for (const p of parts) {
+      p.vy = Math.min(p.vy + p.g * dt, p.vmax);
+      p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt; p.life -= dt;
+      const left = Math.max(0, p.life / p.max);
+      g2.save();
+      g2.globalAlpha = p.fade ? Math.min(1, left * 1.5) : 1;
+      g2.translate(p.x, p.y);
+      switch (p.k) {
+        case 'spr':
+          g2.rotate(p.rot); g2.fillStyle = p.c; g2.fillRect(-5, -1.75, 10, 3.5); break;
+        case 'stick':
+          g2.rotate(p.rot); g2.lineCap = 'round';
+          g2.strokeStyle = '#f0c27b'; g2.lineWidth = 6; g2.beginPath(); g2.moveTo(-20, 0); g2.lineTo(20, 0); g2.stroke();
+          g2.strokeStyle = p.c; g2.lineWidth = 8; g2.beginPath(); g2.moveTo(-20, 0); g2.lineTo(8, 0); g2.stroke();
+          break;
+        case 'star':
+          g2.globalAlpha *= .55 + .45 * Math.sin(T * 6 + p.seed); g2.rotate(p.rot); g2.fillStyle = p.c; star(7 * p.size); break;
+        case 'z':
+          g2.fillStyle = '#e9e5ff';
+          g2.font = `${Math.round(18 + 16 * (1 - left))}px "Bagel Fat One", sans-serif`;
+          g2.fillText('Z', 0, 0); break;
+        case 'coin':
+          g2.scale(Math.abs(Math.cos(p.rot)) + .12, 1);
+          g2.fillStyle = '#ffd34d'; g2.strokeStyle = '#a8740c'; g2.lineWidth = 2;
+          g2.beginPath(); g2.arc(0, 0, 9, 0, 6.283); g2.fill(); g2.stroke();
+          g2.beginPath(); g2.arc(0, 0, 5, 0, 6.283); g2.stroke(); break;
+        case 'drop': {
+          const s = 5 * p.size;
+          g2.fillStyle = p.c; g2.beginPath(); g2.arc(0, 0, s, 0, Math.PI); g2.lineTo(0, -2.2 * s); g2.closePath(); g2.fill(); break;
+        }
+      }
+      g2.restore();
+    }
+    parts = parts.filter((p) => p.life > 0 && p.y < h + 60);
+  }
+
+  /* ---------- 매 프레임 ---------- */
+  function frame(now) {
+    if (!running) return;
+    const dt = Math.min(.05, (now - last) / 1000 || 0); last = now; T += dt;
+    const lt = T - modeStart, W = stage.clientWidth, H = stage.clientHeight;
+    const o = { x: 0, y: 0, r: 0, sx: 1, sy: 1, face: 1, aL: 0, aR: 0, lL: 0, lR: 0, mo: 1, shake: 0, awake: false };
+
+    if (mode === 'enter') {
+      const p = Math.min(1, lt / modeDur), e = 1 - Math.pow(1 - p, 3);
+      o.y = (1 - e) * H * .7; o.sx = o.sy = .3 + .7 * e + Math.sin(p * Math.PI) * .25;
+      o.aL = 120 * e; o.aR = -120 * e; o.mo = 1.4;
+      if (p >= 1) nextMode();
+    } else if (mode === 'exit') {
+      const p = Math.min(1, lt / modeDur);
+      o.y = -p * p * H * .9; o.sx = o.sy = 1 - .6 * p; o.r = 360 * p; o.aL = 130; o.aR = -130;
+      if (p >= 1) begin(pendingId);
+    } else {
+      const s = {
+        lt, T, W, H, dur: modeDur, type,
+        newCycle: (k) => (k !== lastCycle ? ((lastCycle = k), true) : false),
+        every: (key, iv) => { timers[key] = (timers[key] ?? 0) - dt; if (timers[key] <= 0) { timers[key] = iv; return true; } return false; },
+        once: (key) => (flags[key] ? false : (flags[key] = true)),
+        kick: (d) => { shakeUntil = T + d; },
+        fromHead, fromEyes, fromBody,
+      };
+      M[type.modes[mode].move || mode](o, s);
+      if (reduce) { o.x *= .35; o.y *= .35; o.r *= .35; }
+      if (lt > modeDur) nextMode();
+    }
+
+    pos.x = o.x; pos.y = o.y; pos.s = o.sy;
+    actor.style.transform = `translate(${o.x}px, ${o.y}px) rotate(${o.r}deg) scale(${o.sx * o.face}, ${o.sy})`;
+    const dx = type.armDx || 0;
+    P.armL.setAttribute('transform', `translate(${dx} 0) rotate(${o.aL} 74 168)`);
+    P.armR.setAttribute('transform', `translate(${-dx} 0) rotate(${o.aR} 126 168)`);
+    P.legL.setAttribute('transform', `rotate(${o.lL} 90 328)`);
+    P.legR.setAttribute('transform', `rotate(${o.lR} 110 328)`);
+    const mo = Math.min(1.6, o.mo);
+    mouthEl.setAttribute('transform', `translate(100 150) scale(${.9 + .1 * mo} ${mo}) translate(-100 -150)`);
+
+    if (typeId === 'sleepy' && o.awake !== wasAwake) setAwake(o.awake);
+    const bw = type.browWiggle * Math.sin(T * 20);
+    P.browL.setAttribute('transform', `translate(0 ${bw})`);
+    P.browR.setAttribute('transform', `translate(0 ${-bw})`);
+
+    pupilTimer -= dt;
+    if ((type.jitter || wasAwake) && pupilTimer <= 0) {
+      pupilTimer = rand(.07, .2);
+      for (const [el, cx] of [[P.pupL, 85], [P.pupR, 115]]) {
+        const a = rand(0, Math.PI * 2), d = rand(3, 9);
+        el.setAttribute('cx', cx + Math.cos(a) * d);
+        el.setAttribute('cy', 100 + Math.sin(a) * d);
+      }
+    }
+
+    const amp = reduce ? .35 : 1;
+    bubble.style.transform = `translate(calc(-50% + ${o.x * .6}px), ${Math.sin(T * 25) * 2 * amp}px) rotate(${Math.sin(T * 9) * 4 * amp}deg)`;
+    const shake = reduce ? 0 : Math.max(o.shake, T < shakeUntil ? 10 : 0);
+    stage.style.transform = shake ? `translate(${rand(-shake, shake)}px, ${rand(-shake, shake)}px)` : '';
+
+    rainAcc += dt * type.rain.rate * (reduce ? .3 : 1);
+    while (rainAcc >= 1) { rainAcc -= 1; rain(); }
+    drawParts(dt);
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  /* ---------- 버튼 ---------- */
+  function start() {
+    gift.hidden = true;
+    party.hidden = false;
+    ticket.classList.remove('rattle');
+    resize();
+    parts = []; T = 0; rainAcc = 0; shakeUntil = 0; pos = { x: 0, y: 0, s: 1 };
+    begin(randomId(null));
+    running = true; last = performance.now();
+    raf = requestAnimationFrame(frame);
+    actor.focus({ preventScroll: true });
+  }
+
+  claim.addEventListener('click', () => {
+    audio();
+    claim.disabled = true;
+    claim.textContent = '받는 중…';
+    if (!reduce) ticket.classList.add('rattle');
+    SFX.rattle();
+    setTimeout(start, reduce ? 150 : 750);
+  });
+
+  actor.addEventListener('click', () => {
+    if (!running || mode === 'enter' || mode === 'exit') return;
+    if (type.tap && !(reduce && INTENSE.has(type.tap))) setMode(type.tap); else nextMode();
+    burstAtActor(40);
+  });
+
+  $('again').addEventListener('click', () => {
+    if (!running || mode === 'exit') return;
+    pendingId = randomId(typeId);
+    mode = 'exit'; modeStart = T; modeDur = .35;
+    say('안녕~!');
+    SFX.zip();
+  });
+
+  $('mute').addEventListener('click', (e) => {
+    muted = !muted;
+    e.currentTarget.textContent = muted ? '소리 켜기' : '소리 끄기';
+  });
+
+  window.addEventListener('resize', () => { if (running) resize(); });
+})();
+</script>
+</body>
+</html>
